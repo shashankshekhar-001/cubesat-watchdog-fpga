@@ -111,6 +111,13 @@ cubesat-watchdog-fpga/
 > `reset_power`, `reset_comms`, `reset_sensor` — recovery pulse outputs
 
 ![Full Waveform](simulation/waveform_full.png)
+![Power Fault](simulation/waveform_power_fault.png)
+![Recovery Zoom](simulation/waveform_recovery_zoom.png)
+![UART Log](simulation/uart_alert_log.png)
+## 🏗️ Block Diagram
+![Block Diagram](docs/cubesat_block_diagram.svg)
+## 🔄 FSM State Diagram
+![FSM Diagram](docs/fsm_state_diagram.svg)
 
 ---
 
