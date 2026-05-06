@@ -1,0 +1,205 @@
+# 🛰️ FPGA-Based Hardware Watchdog & Health Monitoring System for CubeSat Subsystems
+
+[![Language](https://img.shields.io/badge/Language-Verilog%20HDL-blue?style=flat-square)](https://en.wikipedia.org/wiki/Verilog)
+[![Simulator](https://img.shields.io/badge/Simulator-Icarus%20Verilog-green?style=flat-square)](http://iverilog.icarus.com/)
+[![Platform](https://img.shields.io/badge/Platform-EDA%20Playground-orange?style=flat-square)](https://edaplayground.com)
+[![Status](https://img.shields.io/badge/Status-Simulation%20Complete-brightgreen?style=flat-square)]()
+[![License](https://img.shields.io/badge/License-MIT-lightgrey?style=flat-square)]()
+
+> **Final Year B.Tech Project** — Electronics & Communication Engineering  
+> Central University of Jammu | May 2026  
+> **Author:** Shashank Shekhar Barnwal
+
+---
+
+## 📌 Overview
+
+CubeSats operate in Low Earth Orbit with **no possibility of physical intervention** once launched. A single subsystem freeze — whether caused by cosmic ray-induced bit flips, software deadlocks, or hardware anomalies — can permanently disable a satellite worth crores.
+
+This project presents a **hardware-only watchdog system** implemented on FPGA using Finite State Machine (FSM) architecture in Verilog HDL. It independently monitors **three critical CubeSat subsystems** — Power, Communications, and Sensors — in parallel, and autonomously triggers hardware recovery without any software involvement.
+
+> 💡 *Inspired by real-world CubeSat systems observed during a research internship at the Indian Institute of Space Science and Technology (IIST), Thiruvananthapuram — under the Department of Space, Government of India.*
+
+---
+
+## 🎯 Why Hardware Watchdog over Software?
+
+| Feature | Software Watchdog | This Project (Hardware FSM) |
+|---|---|---|
+| Runs on | Same processor it monitors | Independent FPGA fabric |
+| If processor hangs | Watchdog hangs too ❌ | Keeps running ✅ |
+| Response time | Software interrupt latency | Single clock cycle ✅ |
+| Subsystems monitored | Usually 1 | 3 independently ✅ |
+| Cost | Free (software) | ~₹0 (simulation) ✅ |
+| Radiation tolerance | None | FPGA-inherent ✅ |
+
+---
+
+## 🏗️ System Architecture
+
+```
+┌─────────────────────────────────────────────────┐
+│              FPGA (Verilog HDL)                 │
+│                                                 │
+│  [Power Subsystem] ──hb──► [Watchdog FSM 1] ──► fault_power / reset_power  │
+│  [Comms Subsystem] ──hb──► [Watchdog FSM 2] ──► fault_comms / reset_comms  │
+│  [Sensor Subsystem]──hb──► [Watchdog FSM 3] ──► fault_sensor/ reset_sensor │
+│                                                 │
+│              [Timeout Counter]                  │
+│              [UART Alert Log]                   │
+└─────────────────────────────────────────────────┘
+```
+
+---
+
+## 🔄 FSM State Transitions
+
+Each watchdog instance operates through **5 states**:
+
+```
+        Power ON
+            │
+         [IDLE]
+            │ start
+     [MONITORING] ◄──────────────────────┐
+            │ timeout_counter >= 8        │
+    [FAULT DETECTED]                      │
+            │ next clk                    │
+        [RECOVERY] ── reset_out=1         │
+            │ reset sent                  │
+         [RESUME] ───────────────────────┘
+```
+
+**State descriptions:**
+
+| State | Code | Behaviour |
+|---|---|---|
+| `IDLE` | `3'b000` | Initial state after power-on or reset |
+| `MONITORING` | `3'b001` | Actively watching heartbeat signal |
+| `FAULT_DETECTED` | `3'b010` | Heartbeat absent for ≥8 cycles — fault confirmed |
+| `RECOVERY` | `3'b011` | Asserts `reset_out` for exactly 1 clock cycle |
+| `RESUME` | `3'b100` | Recovery complete — returns to monitoring |
+
+---
+
+## 📁 Repository Structure
+
+```
+cubesat-watchdog-fpga/
+├── src/
+│   ├── design.sv          # Watchdog FSM + 3-subsystem top module
+│   └── testbench.sv       # Simulation testbench with UART alert monitor
+├── simulation/
+│   ├── waveform_full.png          # Full 9-signal waveform
+│   ├── waveform_fault_detect.png  # Fault detection zoom
+│   ├── waveform_recovery.png      # Recovery pulse zoom
+│   └── uart_log.png               # UART alert output
+├── docs/
+│   ├── block_diagram.png          # System block diagram
+│   └── fsm_state_diagram.png      # FSM state transition diagram
+└── README.md
+```
+
+---
+
+## 🧪 Simulation Results
+
+### Full System Waveform — 3 Subsystems Monitored Simultaneously
+
+> `hb_power`, `hb_comms`, `hb_sensor` — heartbeat inputs  
+> `fault_power`, `fault_comms`, `fault_sensor` — fault detection outputs  
+> `reset_power`, `reset_comms`, `reset_sensor` — recovery pulse outputs
+
+![Full Waveform](simulation/waveform_full.png)
+
+---
+
+### UART Alert Log Output
+
+```
+--- All subsystems ONLINE ---
+--- POWER subsystem FROZEN ---
+[ALERT] T=215 | Subsystem POWER  : FAULT DETECTED
+[ALERT] T=225 | Subsystem POWER  : RECOVERY INITIATED
+--- COMMS subsystem FROZEN ---
+[ALERT] T=335 | Subsystem COMMS  : FAULT DETECTED
+[ALERT] T=345 | Subsystem COMMS  : RECOVERY INITIATED
+[ALERT] T=375 | Subsystem POWER  : FAULT DETECTED
+[ALERT] T=375 | Subsystem COMMS  : FAULT DETECTED
+[ALERT] T=385 | Subsystem COMMS  : RECOVERY INITIATED
+[ALERT] T=385 | Subsystem POWER  : RECOVERY INITIATED
+--- All subsystems RECOVERING ---
+$finish called at 570 (1s)
+```
+
+---
+
+## ▶️ Run It Yourself
+
+**Option 1 — EDA Playground (no install needed):**  
+🔗 [Open in EDA Playground](https://edaplayground.com/x/n4rg)  
+Select **Icarus Verilog 12.0**, tick **"Open EPWave after run"**, click **Run**.
+
+**Option 2 — Local (Icarus Verilog):**
+```bash
+git clone https://github.com/shashankshekhar-001/cubesat-watchdog-fpga
+cd cubesat-watchdog-fpga/src
+iverilog -Wall -g2012 design.sv testbench.sv && vvp a.out
+```
+
+---
+
+## 🔧 Key Design Decisions
+
+**Why timeout counter instead of direct heartbeat check?**  
+A single missing heartbeat pulse could be a legitimate glitch. The 8-cycle timeout ensures only a *sustained* absence triggers a fault — eliminating false alarms. This is identical to how industrial watchdog timers work.
+
+**Why separate FSM per subsystem?**  
+A single shared FSM would mean one fault blocks detection of simultaneous faults in other subsystems. Three independent instances allow parallel, isolated fault handling — critical for real satellite operation.
+
+**Why FPGA and not microcontroller?**  
+FPGA fabric continues operating even when all connected processors are hung. The watchdog is physically decoupled from the systems it monitors.
+
+---
+
+## 🌐 Real-World Applications
+
+- **ISRO Student Satellite Program** — OBC fault recovery
+- **HAL Avionics Systems** — UAV embedded fault tolerance  
+- **Automotive ADAS** — Safety-critical processor monitoring
+- **Medical Devices** — Pacemakers, insulin pumps
+- **Qualcomm Snapdragon** — Hardware watchdog timers in every modern SoC
+
+---
+
+## 🛠️ Tools Used
+
+| Tool | Purpose |
+|---|---|
+| Icarus Verilog 12.0 | HDL simulation |
+| EDA Playground | Online simulation environment |
+| EPWave | Waveform analysis |
+| Verilog / SystemVerilog | Hardware description language |
+
+---
+
+## 👨‍💻 Author
+
+**Shashank Shekhar Barnwal**  
+B.Tech ECE — Central University of Jammu (2022–2026)
+
+- 🔬 Research Intern — DRDO SSPL Delhi (FPGA, PID, timing subsystems)
+- ✈️ Intern — HAL MCSRDC Bangalore (FSM, UART, SPI, I2C on FPGA)
+- 🚀 Research Intern — IIST Thiruvananthapuram (CubeSat systems, orbital mechanics)
+
+[![GitHub](https://img.shields.io/badge/GitHub-shashankshekhar--001-black?style=flat-square&logo=github)](https://github.com/shashankshekhar-001)
+
+---
+
+## 📄 License
+
+This project is open-source under the [MIT License](LICENSE).
+
+---
+
+*"If you lose connection with the satellite — you can't reach it again. This project exists because of that."*
