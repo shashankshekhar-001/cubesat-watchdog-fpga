@@ -6,7 +6,7 @@
 [![Status](https://img.shields.io/badge/Status-Simulation%20Complete-brightgreen?style=flat-square)]()
 [![License](https://img.shields.io/badge/License-MIT-lightgrey?style=flat-square)]()
 
-> **Final Year B.Tech Project** — Electronics & Communication Engineering  
+> **Final Year B.Tech** — Electronics & Communication Engineering  
 > Central University of Jammu | May 2026  
 > **Author:** Shashank Shekhar Barnwal
 
