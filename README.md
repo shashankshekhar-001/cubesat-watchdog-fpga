@@ -27,15 +27,15 @@ This project presents a **hardware-only watchdog system** implemented on FPGA us
 | Feature | Software Watchdog | This Project (Hardware FSM) |
 |---|---|---|
 | Runs on | Same processor it monitors | Independent FPGA fabric |
-| If processor hangs | Watchdog hangs too ❌ | Keeps running ✅ |
-| Response time | Software interrupt latency | Single clock cycle ✅ |
-| Subsystems monitored | Usually 1 | 3 independently ✅ |
-| Cost | Free (software) | ~₹0 (simulation) ✅ |
-| Radiation tolerance | None | FPGA-inherent ✅ |
+| If processor hangs | Watchdog hangs too  | Keeps running  |
+| Response time | Software interrupt latency | Single clock cycle  |
+| Subsystems monitored | Usually 1 | 3 independently  |
+| Cost | Free (software) | ~₹0 (simulation)  |
+| Radiation tolerance | None | FPGA-inherent |
 
 ---
 
-## 🏗️ System Architecture
+##  System Architecture
 
 ```
 ┌─────────────────────────────────────────────────┐
@@ -52,7 +52,7 @@ This project presents a **hardware-only watchdog system** implemented on FPGA us
 
 ---
 
-## 🔄 FSM State Transitions
+##  FSM State Transitions
 
 Each watchdog instance operates through **5 states**:
 
@@ -82,7 +82,7 @@ Each watchdog instance operates through **5 states**:
 
 ---
 
-## 📁 Repository Structure
+##  Repository Structure
 
 ```
 cubesat-watchdog-fpga/
@@ -102,7 +102,7 @@ cubesat-watchdog-fpga/
 
 ---
 
-## 🧪 Simulation Results
+##  Simulation Results
 
 ### Full System Waveform — 3 Subsystems Monitored Simultaneously
 
@@ -114,9 +114,9 @@ cubesat-watchdog-fpga/
 ![Power Fault](simulation/waveform_power_fault.png)
 ![Recovery Zoom](simulation/waveform_recovery_zoom.png)
 ![UART Log](simulation/uart_alert_log.png)
-## 🏗️ Block Diagram
+##  Block Diagram
 ![Block Diagram](docs/cubesat_block_diagram.svg)
-## 🔄 FSM State Diagram
+##  FSM State Diagram
 ![FSM Diagram](docs/fsm_state_diagram.svg)
 
 ---
@@ -141,7 +141,7 @@ $finish called at 570 (1s)
 
 ---
 
-## ▶️ Run It Yourself
+## Run It Yourself
 
 **Option 1 — EDA Playground (no install needed):**  
 🔗 [Open in EDA Playground](https://edaplayground.com/x/n4rg)  
@@ -169,7 +169,7 @@ FPGA fabric continues operating even when all connected processors are hung. The
 
 ---
 
-## 🌐 Real-World Applications
+## Real-World Applications
 
 - **ISRO Student Satellite Program** — OBC fault recovery
 - **HAL Avionics Systems** — UAV embedded fault tolerance  
@@ -190,7 +190,7 @@ FPGA fabric continues operating even when all connected processors are hung. The
 
 ---
 
-## 👨‍💻 Author
+##  Author
 
 **Shashank Shekhar Barnwal**  
 B.Tech ECE — Central University of Jammu (2022–2026)
