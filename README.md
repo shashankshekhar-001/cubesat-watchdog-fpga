@@ -12,17 +12,17 @@
 
 ---
 
-## 📌 Overview
+## Overview
 
 CubeSats operate in Low Earth Orbit with **no possibility of physical intervention** once launched. A single subsystem freeze — whether caused by cosmic ray-induced bit flips, software deadlocks, or hardware anomalies — can permanently disable a satellite worth crores.
 
 This project presents a **hardware-only watchdog system** implemented on FPGA using Finite State Machine (FSM) architecture in Verilog HDL. It independently monitors **three critical CubeSat subsystems** — Power, Communications, and Sensors — in parallel, and autonomously triggers hardware recovery without any software involvement.
 
-> 💡 *Inspired by real-world CubeSat systems observed during a research internship at the Indian Institute of Space Science and Technology (IIST), Thiruvananthapuram — under the Department of Space, Government of India.*
+>  *Inspired by real-world CubeSat systems observed during a research internship at the Indian Institute of Space Science and Technology (IIST), Thiruvananthapuram — under the Department of Space, Government of India.*
 
 ---
 
-## 🎯 Why Hardware Watchdog over Software?
+## Why Hardware Watchdog over Software?
 
 | Feature | Software Watchdog | This Project (Hardware FSM) |
 |---|---|---|
@@ -39,7 +39,7 @@ This project presents a **hardware-only watchdog system** implemented on FPGA us
 
 ```
 ┌─────────────────────────────────────────────────┐
-│              FPGA (Verilog HDL)                 │
+│              FPGA (Verilog HDL)                  │
 │                                                 │
 │  [Power Subsystem] ──hb──► [Watchdog FSM 1] ──► fault_power / reset_power  │
 │  [Comms Subsystem] ──hb──► [Watchdog FSM 2] ──► fault_comms / reset_comms  │
@@ -133,6 +133,7 @@ cubesat-watchdog-fpga/
 [ALERT] T=345 | Subsystem COMMS  : RECOVERY INITIATED
 [ALERT] T=375 | Subsystem POWER  : FAULT DETECTED
 [ALERT] T=375 | Subsystem COMMS  : FAULT DETECTED
+[EMERGENCY] T=385 | 2+ SUBSYSTEMS FAILED | GLOBAL RESET FIRED
 [ALERT] T=385 | Subsystem COMMS  : RECOVERY INITIATED
 [ALERT] T=385 | Subsystem POWER  : RECOVERY INITIATED
 --- All subsystems RECOVERING ---
@@ -143,11 +144,11 @@ $finish called at 570 (1s)
 
 ## Run It Yourself
 
-**Option 1 — EDA Playground (no install needed):**  
+**Option 1 - EDA Playground (no install needed):**  
 🔗 [Open in EDA Playground](https://edaplayground.com/x/n4rg)  
 Select **Icarus Verilog 12.0**, tick **"Open EPWave after run"**, click **Run**.
 
-**Option 2 — Local (Icarus Verilog):**
+**Option 2 - Local (Icarus Verilog):**
 ```bash
 git clone https://github.com/shashankshekhar-001/cubesat-watchdog-fpga
 cd cubesat-watchdog-fpga/src
@@ -158,28 +159,31 @@ iverilog -Wall -g2012 design.sv testbench.sv && vvp a.out
 
 ## 🔧 Key Design Decisions
 
-**Why timeout counter instead of direct heartbeat check?**  
-A single missing heartbeat pulse could be a legitimate glitch. The 8-cycle timeout ensures only a *sustained* absence triggers a fault — eliminating false alarms. This is identical to how industrial watchdog timers work.
+**Timeout counter over direct heartbeat check?**  
+A single missing heartbeat pulse could be a transient glitch. The 8-cycle timeout ensures only a sustained absence triggers a fault, eliminating false alarms. This mirrors how industrial-grade watchdog timers operate.
 
-**Why separate FSM per subsystem?**  
-A single shared FSM would mean one fault blocks detection of simultaneous faults in other subsystems. Three independent instances allow parallel, isolated fault handling — critical for real satellite operation.
+**Separate FSM per subsystem?**  
+A shared FSM would serialize fault detection one fault would block monitoring of others. Three independent instances allow fully parallel, isolated fault handling, which is critical in real satellite operation where multiple simultaneous anomalies are possible.
 
-**Why FPGA and not microcontroller?**  
-FPGA fabric continues operating even when all connected processors are hung. The watchdog is physically decoupled from the systems it monitors.
+**Hardware over software?**  
+FPGA fabric operates independently of any attached processor. If the monitored system is completely frozen, the watchdog is unaffected and continues operating something a software watchdog running on the same processor cannot guarantee.
+
+**Emergency Mode**
+When two or more subsystems fail simultaneously, individual recovery is insufficient. The system escalates to a global reset, which is the standard fault recovery strategy in radiation-hardened satellite OBC designs.
 
 ---
 
 ## Real-World Applications
 
-- **ISRO Student Satellite Program** — OBC fault recovery
-- **HAL Avionics Systems** — UAV embedded fault tolerance  
-- **Automotive ADAS** — Safety-critical processor monitoring
-- **Medical Devices** — Pacemakers, insulin pumps
-- **Qualcomm Snapdragon** — Hardware watchdog timers in every modern SoC
+- **ISRO Student Satellite Program** - OBC fault recovery
+- **HAL Avionics Systems** - UAV embedded fault tolerance  
+- **Automotive ADAS** - Safety-critical processor monitoring
+- **Medical Devices** - Pacemakers, insulin pumps
+- **Qualcomm Snapdragon** - Hardware watchdog timers in every modern SoC
 
 ---
 
-## 🛠️ Tools Used
+##  Tools Used
 
 | Tool | Purpose |
 |---|---|
@@ -195,15 +199,15 @@ FPGA fabric continues operating even when all connected processors are hung. The
 **Shashank Shekhar Barnwal**  
 B.Tech ECE — Central University of Jammu (2022–2026)
 
-- 🔬 Research Intern — DRDO SSPL Delhi (FPGA, PID, timing subsystems)
-- ✈️ Intern — HAL MCSRDC Bangalore (FSM, UART, SPI, I2C on FPGA)
-- 🚀 Research Intern — IIST Thiruvananthapuram (CubeSat systems, orbital mechanics)
+-  Research Intern - DRDO SSPL Delhi (FPGA, PID, timing subsystems)
+-  Intern - HAL MCSRDC Bangalore (FSM, UART, SPI, I2C on FPGA)
+-  Research Intern - IIST Thiruvananthapuram (CubeSat systems, orbital mechanics)
 
 [![GitHub](https://img.shields.io/badge/GitHub-shashankshekhar--001-black?style=flat-square&logo=github)](https://github.com/shashankshekhar-001)
 
 ---
 
-## 📄 License
+## License
 
 This project is open-source under the [MIT License](LICENSE).
 
