@@ -60,23 +60,25 @@ end
 
 endmodule
 
-
 // ============================================
 // TOP MODULE — 3 Subsystem Health Monitor
+// With Emergency Mode Detection
 // ============================================
 
 module cubesat_health_monitor(
     input clk,
     input rst,
-    input hb_power,       // heartbeat from Power subsystem
-    input hb_comms,       // heartbeat from Comms subsystem
-    input hb_sensor,      // heartbeat from Sensor subsystem
+    input hb_power,
+    input hb_comms,
+    input hb_sensor,
     output fault_power,
     output fault_comms,
     output fault_sensor,
     output reset_power,
     output reset_comms,
     output reset_sensor,
+    output reg global_reset,
+    output reg emergency_mode,
     output [2:0] state_power,
     output [2:0] state_comms,
     output [2:0] state_sensor
@@ -109,5 +111,31 @@ watchdog_fsm wd_sensor (
     .reset_out(reset_sensor),
     .current_state(state_sensor)
 );
+
+// ============================================
+// EMERGENCY MODE LOGIC
+// If 2 or more subsystems fault → EMERGENCY
+// ============================================
+
+reg [1:0] fault_count;
+
+always @(*) begin
+    fault_count = fault_power + fault_comms + fault_sensor;
+end
+
+always @(posedge clk or posedge rst) begin
+    if (rst) begin
+        emergency_mode <= 0;
+        global_reset   <= 0;
+    end
+    else if (fault_count >= 2) begin
+        emergency_mode <= 1;
+        global_reset   <= 1;  // fire global reset to all
+    end
+    else begin
+        emergency_mode <= 0;
+        global_reset   <= 0;
+    end
+end
 
 endmodule
