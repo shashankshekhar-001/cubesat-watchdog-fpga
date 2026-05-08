@@ -30,7 +30,7 @@ This project presents a **hardware-only watchdog system** implemented on FPGA us
 | If processor hangs | Watchdog hangs too  | Keeps running  |
 | Response time | Software interrupt latency | Single clock cycle  |
 | Subsystems monitored | Usually 1 | 3 independently  |
-| Cost | Free (software) | ~₹0 (simulation)  |
+| Cost | Free (software) | (simulation)  |
 | Radiation tolerance | None | FPGA-inherent |
 
 ---
