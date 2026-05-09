@@ -1,7 +1,7 @@
 // ============================================
 // CubeSat Hardware Watchdog & Health Monitor
 // FPGA-Based Fault Detection & Recovery FSM
-// Author: Shashank Shekhar Barnwal
+// Author: Shashank Shekhar Barnwal  
 // B.Tech ECE - Central University of Jammu
 // ============================================
 
