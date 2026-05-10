@@ -214,7 +214,7 @@ Shashank Shekhar Barnwal — Central University of Jammu, May 2026
 
 [![Paper Preview](paper/paper_preview.png)](paper/CubeSat_FPGA_Watchdog_FSM.pdf)
 
-[Read Full Paper →](paper/CubeSat_FPGA_Watchdog_FSM.pdf)
+[Read Full Paper](paper/CubeSat_FPGA_Watchdog_FSM.pdf)
 
 ---
 
