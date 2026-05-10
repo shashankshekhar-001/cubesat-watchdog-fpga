@@ -205,6 +205,14 @@ B.Tech ECE — Central University of Jammu (2022–2026)
 
 [![GitHub](https://img.shields.io/badge/GitHub-shashankshekhar--001-black?style=flat-square&logo=github)](https://github.com/shashankshekhar-001)
 
+## Publication
+
+**IEEE Format Technical Paper:**
+"FPGA-Based Hardware Watchdog and Health Monitoring System for CubeSat Subsystems Using Finite State Machine"
+Shashank Shekhar Barnwal — Central University of Jammu, May 2026
+
+[Read Paper](paper/CubeSat_FPGA_Watchdog_FSM.pdf)
+
 ---
 
 ## License
