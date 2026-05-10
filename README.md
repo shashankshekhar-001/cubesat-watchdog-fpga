@@ -1,4 +1,4 @@
-# 🛰️ FPGA-Based Hardware Watchdog & Health Monitoring System for CubeSat Subsystems
+# FPGA-Based Hardware Watchdog & Health Monitoring System for CubeSat Subsystems
 
 [![Language](https://img.shields.io/badge/Language-Verilog%20HDL-blue?style=flat-square)](https://en.wikipedia.org/wiki/Verilog)
 [![Simulator](https://img.shields.io/badge/Simulator-Icarus%20Verilog-green?style=flat-square)](http://iverilog.icarus.com/)
