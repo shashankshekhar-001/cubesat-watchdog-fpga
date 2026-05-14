@@ -1,11 +1,5 @@
 # FPGA-Based Hardware Watchdog & Health Monitoring System for CubeSat Subsystems
 
-[![Language](https://img.shields.io/badge/Language-Verilog%20HDL-blue?style=flat-square)](https://en.wikipedia.org/wiki/Verilog)
-[![Simulator](https://img.shields.io/badge/Simulator-Icarus%20Verilog-green?style=flat-square)](http://iverilog.icarus.com/)
-[![Platform](https://img.shields.io/badge/Platform-EDA%20Playground-orange?style=flat-square)](https://edaplayground.com)
-[![Status](https://img.shields.io/badge/Status-Simulation%20Complete-brightgreen?style=flat-square)]()
-[![License](https://img.shields.io/badge/License-MIT-lightgrey?style=flat-square)]()
-
 > **Final Year B.Tech** — Electronics & Communication Engineering  
 > Central University of Jammu | May 2026  
 > **Author:** Shashank Shekhar Barnwal
